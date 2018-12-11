@@ -14,15 +14,13 @@
 # ==============================================================================
 if (systemlib_JSONCPP)
 
-  find_package(jsoncpp REQUIRED)
-  include_directories(${JSONCPP_INCLUDEDIR})
-  list(APPEND tensorflow_EXTERNAL_LIBRARIES ${JSONCPP_LIBRARIES})
-  list(APPEND ADD_LINK_DIRECTORY ${JSONCPP_LIBDIR})
-  list(APPEND ADD_CFLAGS ${JSONCPP_CFLAGS_OTHER})
+  find_package(JsonCpp REQUIRED)
+  include_directories(${JSON_CPP_INCLUDE_DIR})
+  list(APPEND tensorflow_EXTERNAL_LIBRARIES ${JSON_CPP_LIBRARIES})
 
-  message(STATUS "Found jsoncpp (\"${JSONCPP_VERSION}\") external")
-  message(STATUS "  jsoncpp includes: ${JSONCPP_INCLUDEDIR}")
-  message(STATUS "  jsoncpp libraries: ${JSONCPP_LIBRARIES}")
+  message(STATUS "Found jsoncpp (\"${JSON_CPP_VERSION}\") external")
+  message(STATUS "  jsoncpp includes: ${JSON_CPP_INCLUDE_DIR}")
+  message(STATUS "  jsoncpp libraries: ${JSON_CPP_LIBRARIES}")
 
   add_custom_target(jsoncpp_build)
   list(APPEND tensorflow_EXTERNAL_DEPENDENCIES jsoncpp_build)

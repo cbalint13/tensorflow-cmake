@@ -923,53 +923,57 @@ add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
                                    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/tensorflow/stream_executor)
 
 # google protobuf headers
-add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-  ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/google)
-add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/protobuf/src/protobuf/src/google
-                                   ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/google)
+if (NOT systemlib_PROTOBUF)
+  add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/google)
+  add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/protobuf/src/protobuf/src/google
+                                     ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/google)
+endif (NOT systemlib_PROTOBUF)
 
 # Eigen directory
-add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-  ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/Eigen)
-add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/eigen/src/eigen/Eigen
-                                   ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/Eigen)
+if (NOT systemlib_EIGEN3)
+  add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/Eigen)
+  add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/eigen/src/eigen_build/Eigen
+                                     ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/Eigen)
 
-# external directory
-add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-  ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/external)
-add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-  ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/external/eigen_archive)
-add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/external/eigen_archive
-                                   ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/external/eigen_archive)
+  # external directory
+  add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/external)
+  add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/external/eigen_archive)
+  add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/external/eigen_archive
+                                     ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/external/eigen_archive)
 
-# third_party eigen directory
-add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-  ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/third_party)
-add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-  ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/third_party/eigen3)
-add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${tensorflow_source_dir}/third_party/eigen3
-                                   ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/third_party/eigen3)
+  # third_party eigen directory
+  add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/third_party)
+  add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/third_party/eigen3)
+  add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${tensorflow_source_dir}/third_party/eigen3
+                                     ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/third_party/eigen3)
 
-# unsupported Eigen directory
-add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-  ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/unsupported)
-add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-  ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/unsupported/Eigen)
-add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/eigen/src/eigen/unsupported/Eigen
-                                   ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/unsupported/Eigen)
+  # unsupported Eigen directory
+  add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/unsupported)
+  add_custom_command(TARGET tf_python_build_pip_package PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/unsupported/Eigen)
+  add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/eigen/src/eigen_build/unsupported/Eigen
+                                     ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/include/unsupported/Eigen)
+endif (NOT systemlib_EIGEN3)
 
 if(${tensorflow_TF_NIGHTLY})
   if(${tensorflow_ENABLE_GPU})

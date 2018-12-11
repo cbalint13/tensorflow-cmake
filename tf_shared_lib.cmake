@@ -130,22 +130,27 @@ install(DIRECTORY ${tensorflow_source_dir}/tensorflow/stream_executor/
         DESTINATION include/tensorflow/stream_executor
         FILES_MATCHING PATTERN "*.h")
 # google protobuf headers
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/protobuf/src/protobuf/src/google/
-        DESTINATION include/google
-        FILES_MATCHING PATTERN "*.h")
-# Eigen directory
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/eigen/src/eigen/Eigen/
-        DESTINATION include/Eigen)
-# external directory
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/external/eigen_archive/
-        DESTINATION include/external/eigen_archive)
-# third_party eigen directory
-install(DIRECTORY ${tensorflow_source_dir}/third_party/eigen3/
-        DESTINATION include/third_party/eigen3)
-# unsupported Eigen directory
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/eigen/src/eigen/unsupported/Eigen/
-        DESTINATION include/unsupported/Eigen)
-# mkl
+if (NOT systemlib_PROTOBUF)
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/protobuf/src/protobuf/src/google/
+          DESTINATION include/google
+          FILES_MATCHING PATTERN "*.h")
+endif (NOT systemlib_PROTOBUF)
+# eigen headers
+if (NOT systemlib_EIGEN3)
+  # Eigen directory
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/eigen/src/eigen_build/Eigen/
+          DESTINATION include/Eigen)
+  # external directory
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/external/eigen_archive/
+          DESTINATION include/external/eigen_archive)
+  # third_party eigen directory
+  install(DIRECTORY ${tensorflow_source_dir}/third_party/eigen3/
+          DESTINATION include/third_party/eigen3)
+  # unsupported Eigen directory
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/eigen/src/eigen_build/unsupported/Eigen/
+          DESTINATION include/unsupported/Eigen)
+endif (NOT systemlib_EIGEN3)
+# mkl headers
 if (tensorflow_ENABLE_MKL_SUPPORT)
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mkl/src/mkl/include/
             DESTINATION include/mkl)

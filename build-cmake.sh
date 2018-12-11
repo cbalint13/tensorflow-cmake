@@ -15,16 +15,18 @@ cmake .. \
       -DCUDA_HOST_COMPILER="/usr/bin/cuda-gcc" \
       -DCUDA_NVCC_FLAGS="--expt-relaxed-constexpr --compiler-options -fPIC --shared -shared -I/home/cbalint/rpmbuild/SOURCES/tensorflow/" \
       -Dtensorflow_CUDNN_INCLUDE="/usr/local/cuda/include"
-popd
 
+popd
 
 ###
 ### small workarounds (TOFIX)
 ###
 
+mkdir -p BUILD/cuda
+ln -sf /usr/local/cuda/include  BUILD/cuda/include
+
 mkdir -p BUILD/include/
 ln -sf /usr/include/json BUILD/include/json
 
-mkdir -p BUILD/cuda
-ln -sf /usr/local/cuda/include  BUILD/cuda/include
+export PYTHONPATH=$PYTHONPATH:`pwd`/BUILD/tf_python/tensorflow/python/
 
