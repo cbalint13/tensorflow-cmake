@@ -16,14 +16,18 @@
 # tf_core_distributed_runtime library
 ########################################################
 file(GLOB_RECURSE tf_core_distributed_runtime_srcs
-   "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/*.h"
-   "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/*.h"
+    "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/eager/*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/eager/*.h"
 )
 
 file(GLOB_RECURSE tf_core_distributed_runtime_exclude_srcs
     "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/server_lib.cc"  # Build in tf_core_cpu instead.
     "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/*test*.h"
     "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/*test*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/eager/*test*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/eager/*test*.h"
     "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/rpc/grpc_tensorflow_server.cc"
 )
 

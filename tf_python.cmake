@@ -322,15 +322,14 @@ function(GENERATE_PYTHON_OP_LIB tf_python_op_lib_name)
         ${GENERATE_PYTHON_OP_LIB_DESTINATION} PARENT_SCOPE)
 endfunction()
 
-GENERATE_PYTHON_OP_LIB("audio_ops")
 GENERATE_PYTHON_OP_LIB("array_ops")
+GENERATE_PYTHON_OP_LIB("audio_ops")
 GENERATE_PYTHON_OP_LIB("batch_ops")
 GENERATE_PYTHON_OP_LIB("bitwise_ops")
 GENERATE_PYTHON_OP_LIB("boosted_trees_ops")
-GENERATE_PYTHON_OP_LIB("math_ops")
-GENERATE_PYTHON_OP_LIB("functional_ops")
 GENERATE_PYTHON_OP_LIB("candidate_sampling_ops")
 GENERATE_PYTHON_OP_LIB("checkpoint_ops")
+GENERATE_PYTHON_OP_LIB("collective_ops")
 GENERATE_PYTHON_OP_LIB("control_flow_ops"
   ADDITIONAL_LIBRARIES $<TARGET_OBJECTS:tf_no_op>)
 GENERATE_PYTHON_OP_LIB("ctc_ops")
@@ -341,14 +340,19 @@ GENERATE_PYTHON_OP_LIB("decode_proto_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/proto/python/ops/gen_decode_proto_op.py)
 GENERATE_PYTHON_OP_LIB("encode_proto_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/proto/python/ops/gen_encode_proto_op.py)
+GENERATE_PYTHON_OP_LIB("experimental_dataset_ops")
+GENERATE_PYTHON_OP_LIB("function_ops")
+GENERATE_PYTHON_OP_LIB("functional_ops")
 GENERATE_PYTHON_OP_LIB("image_ops")
 GENERATE_PYTHON_OP_LIB("io_ops")
 GENERATE_PYTHON_OP_LIB("linalg_ops")
 GENERATE_PYTHON_OP_LIB("list_ops")
 GENERATE_PYTHON_OP_LIB("logging_ops")
 GENERATE_PYTHON_OP_LIB("lookup_ops")
-GENERATE_PYTHON_OP_LIB("nn_ops")
 GENERATE_PYTHON_OP_LIB("manip_ops")
+GENERATE_PYTHON_OP_LIB("math_ops")
+GENERATE_PYTHON_OP_LIB("nn_ops")
+GENERATE_PYTHON_OP_LIB("no_op")
 GENERATE_PYTHON_OP_LIB("parsing_ops")
 GENERATE_PYTHON_OP_LIB("random_ops")
 GENERATE_PYTHON_OP_LIB("remote_fused_graph_ops"
@@ -356,17 +360,21 @@ GENERATE_PYTHON_OP_LIB("remote_fused_graph_ops"
 GENERATE_PYTHON_OP_LIB("resource_variable_ops")
 GENERATE_PYTHON_OP_LIB("rpc_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/rpc/python/ops/gen_rpc_op.py)
+GENERATE_PYTHON_OP_LIB("scoped_allocator_ops")
 GENERATE_PYTHON_OP_LIB("script_ops")
+GENERATE_PYTHON_OP_LIB("sendrecv_ops")
 GENERATE_PYTHON_OP_LIB("sdca_ops")
 GENERATE_PYTHON_OP_LIB("set_ops")
-GENERATE_PYTHON_OP_LIB("state_ops")
 GENERATE_PYTHON_OP_LIB("sparse_ops")
 GENERATE_PYTHON_OP_LIB("spectral_ops")
+GENERATE_PYTHON_OP_LIB("state_ops")
+GENERATE_PYTHON_OP_LIB("stateless_random_ops")
 GENERATE_PYTHON_OP_LIB("string_ops")
 GENERATE_PYTHON_OP_LIB("summary_ops")
 GENERATE_PYTHON_OP_LIB("user_ops")
 GENERATE_PYTHON_OP_LIB("training_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/training/gen_training_ops.py)
+GENERATE_PYTHON_OP_LIB("word2vec_ops")
 
 GENERATE_PYTHON_OP_LIB("contrib_boosted_trees_model_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/boosted_trees/python/ops/gen_model_ops.py)
@@ -382,8 +390,6 @@ GENERATE_PYTHON_OP_LIB("contrib_boosted_trees_stats_accumulator_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/boosted_trees/python/ops/gen_stats_accumulator_ops.py)
 GENERATE_PYTHON_OP_LIB("contrib_coder_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/coder/python/ops/gen_coder_ops.py)
-GENERATE_PYTHON_OP_LIB("contrib_data_dataset_ops"
-  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/data/python/ops/gen_dataset_ops.py)
 GENERATE_PYTHON_OP_LIB("contrib_factorization_clustering_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/factorization/python/ops/gen_clustering_ops.py)
 GENERATE_PYTHON_OP_LIB("contrib_factorization_factorization_ops"
@@ -402,8 +408,6 @@ GENERATE_PYTHON_OP_LIB("contrib_layers_sparse_feature_cross_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/layers/ops/gen_sparse_feature_cross_op.py)
 GENERATE_PYTHON_OP_LIB("contrib_memory_stats_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/memory_stats/ops/gen_memory_stats_ops.py)
-GENERATE_PYTHON_OP_LIB("contrib_nccl_ops"
-  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/nccl/ops/gen_nccl_ops.py)
 GENERATE_PYTHON_OP_LIB("contrib_periodic_resample_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/periodic_resample/python/ops/gen_periodic_resample_op.py)
 
@@ -431,8 +435,6 @@ GENERATE_PYTHON_OP_LIB("contrib_bigquery_reader_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/cloud/python/ops/gen_bigquery_reader_ops.py)
 GENERATE_PYTHON_OP_LIB("contrib_gcs_config_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/cloud/python/ops/gen_gcs_config_ops.py)
-GENERATE_PYTHON_OP_LIB("stateless_random_ops"
-  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/stateless/gen_stateless_random_ops.py)
 GENERATE_PYTHON_OP_LIB("debug_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/debug/ops/gen_debug_ops.py)
 
@@ -485,6 +487,8 @@ set (pywrap_tensorflow_internal_src
     "${tensorflow_source_dir}/tensorflow/python/eager/pywrap_tfe_src.cc"
     "${tensorflow_source_dir}/tensorflow/python/client/tf_session_helper.h"
     "${tensorflow_source_dir}/tensorflow/python/client/tf_session_helper.cc"
+    "${tensorflow_source_dir}/tensorflow/python/client/session_ref.h"
+    "${tensorflow_source_dir}/tensorflow/python/client/session_ref.cc"
     "${tensorflow_source_dir}/tensorflow/python/framework/cpp_shape_inference.h"
     "${tensorflow_source_dir}/tensorflow/python/framework/cpp_shape_inference.cc"
     "${tensorflow_source_dir}/tensorflow/python/framework/python_op_gen.h"
@@ -535,6 +539,7 @@ if(WIN32)
     add_library(pywrap_tensorflow_internal_static STATIC
         ${pywrap_tensorflow_internal_src}
         $<TARGET_OBJECTS:tf_c>
+        $<TARGET_OBJECTS:tf_c_eager>
         $<TARGET_OBJECTS:tf_c_python_api>
         $<TARGET_OBJECTS:tf_core_lib>
         $<TARGET_OBJECTS:tf_core_cpu>
@@ -544,6 +549,7 @@ if(WIN32)
         $<TARGET_OBJECTS:tf_cc_ops>
         $<TARGET_OBJECTS:tf_cc_while_loop>
         $<TARGET_OBJECTS:tf_core_ops>
+        $<TARGET_OBJECTS:tf_core_eager_runtime>
         $<TARGET_OBJECTS:tf_core_direct_session>
         $<TARGET_OBJECTS:tf_grappler>
         $<TARGET_OBJECTS:tf_tools_transform_graph_lib>
@@ -592,6 +598,7 @@ endif(WIN32)
 add_library(pywrap_tensorflow_internal SHARED
     ${pywrap_tensorflow_internal_src}
     $<TARGET_OBJECTS:tf_c>
+    $<TARGET_OBJECTS:tf_c_eager>
     $<TARGET_OBJECTS:tf_c_python_api>
     $<TARGET_OBJECTS:tf_core_lib>
     $<TARGET_OBJECTS:tf_core_cpu>
@@ -817,10 +824,10 @@ add_dependencies(tf_python_api tf_python_ops)
 ########################################################
 
 # Parse tensorflow/python/tools/api/generator/BUILD to get list of generated files.
-FILE(READ ${tensorflow_source_dir}/tensorflow/python/tools/api/generator/api_gen.bzl api_generator_BUILD_text)
-STRING(REGEX MATCH "# BEGIN GENERATED ESTIMATOR FILES.*# END GENERATED ESTIMATOR FILES" api_init_files_text ${api_generator_BUILD_text})
-string(REPLACE "# BEGIN GENERATED ESTIMATOR FILES" "" api_init_files_text ${api_init_files_text})
-string(REPLACE "# END GENERATED ESTIMATOR FILES" "" api_init_files_text ${api_init_files_text})
+FILE(READ ${tensorflow_source_dir}/tensorflow/python/tools/api/generator/api_init_files.bzl api_generator_BUILD_text)
+STRING(REGEX MATCH "# BEGIN GENERATED FILES.*# END GENERATED FILES" api_init_files_text ${api_generator_BUILD_text})
+string(REPLACE "# BEGIN GENERATED FILES" "" api_init_files_text ${api_init_files_text})
+string(REPLACE "# END GENERATED FILES" "" api_init_files_text ${api_init_files_text})
 string(REPLACE "," ";" api_init_files_list ${api_init_files_text})
 
 set(api_init_files "")
@@ -843,7 +850,7 @@ add_custom_command(
       COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/tf_python "${PY_RUNTIME_ENV}" ${PYTHON_EXECUTABLE}
               "${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/tools/api/generator/create_python_api.py"
               "--apidir=${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/estimator/api"
-              "--package=tensorflow.python.estimator"
+              "--package=tensorflow.python.estimator.api"
               "--apiname=estimator"
           "--output_package=tensorflow.python.estimator.api"
               "${estimator_api_init_list_file}"

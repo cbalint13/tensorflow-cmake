@@ -27,7 +27,8 @@ if (systemlib_ABSEIL_CPP)
                absl_hash
                absl_internal_city
                absl_container
-               absl_synchronization)
+               absl_synchronization
+               absl_variant)
 
   include_directories(${ABSEIL_CPP_INCLUDE_DIR})
   list(APPEND tensorflow_EXTERNAL_LIBRARIES ${ABSEIL_CPP_LIBRARIES})

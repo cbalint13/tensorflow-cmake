@@ -24,6 +24,7 @@ if(WIN32)
   #
   add_library(tensorflow_static STATIC
       $<TARGET_OBJECTS:tf_c>
+      $<TARGET_OBJECTS:tf_c_eager>
       $<TARGET_OBJECTS:tf_cc>
       $<TARGET_OBJECTS:tf_cc_framework>
       $<TARGET_OBJECTS:tf_cc_ops>
@@ -32,6 +33,7 @@ if(WIN32)
       $<TARGET_OBJECTS:tf_core_cpu>
       $<TARGET_OBJECTS:tf_core_framework>
       $<TARGET_OBJECTS:tf_core_ops>
+      $<TARGET_OBJECTS:tf_core_eager_runtime>
       $<TARGET_OBJECTS:tf_core_direct_session>
       $<TARGET_OBJECTS:tf_tools_transform_graph_lib>
       $<$<BOOL:${tensorflow_ENABLE_GRPC_SUPPORT}>:$<TARGET_OBJECTS:tf_core_distributed_runtime>>
@@ -66,6 +68,7 @@ endif(WIN32)
 # TensorFlow runtime and the standard ops and kernels.
 add_library(tensorflow SHARED
     $<TARGET_OBJECTS:tf_c>
+    $<TARGET_OBJECTS:tf_c_eager>
     $<TARGET_OBJECTS:tf_cc>
     $<TARGET_OBJECTS:tf_cc_framework>
     $<TARGET_OBJECTS:tf_cc_ops>
@@ -100,14 +103,14 @@ if(WIN32)
   add_dependencies(tensorflow tensorflow_static)
 endif(WIN32)
 
-target_include_directories(tensorflow PUBLIC 
+target_include_directories(tensorflow PUBLIC
     $<INSTALL_INTERFACE:include/>)
 
 install(TARGETS tensorflow EXPORT tensorflow_export
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
-        
+
 install(EXPORT tensorflow_export
         FILE TensorflowConfig.cmake
         DESTINATION lib/cmake)

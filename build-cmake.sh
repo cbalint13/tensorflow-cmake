@@ -28,5 +28,3 @@ ln -sf /usr/local/cuda/include  BUILD/cuda/include
 mkdir -p BUILD/include/
 ln -sf /usr/include/json BUILD/include/json
 
-export PYTHONPATH=$PYTHONPATH:`pwd`/BUILD/tf_python/tensorflow/python/
-
