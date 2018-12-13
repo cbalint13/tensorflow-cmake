@@ -70,6 +70,11 @@ add_executable(${transform_graph}
     $<TARGET_OBJECTS:tf_core_direct_session>
     $<TARGET_OBJECTS:tf_tools_transform_graph_lib>
     $<TARGET_OBJECTS:tf_core_kernels>
+    $<TARGET_OBJECTS:tf_grappler>
+    $<TARGET_OBJECTS:tf_cc>
+    $<TARGET_OBJECTS:tf_cc_ops>
+    $<TARGET_OBJECTS:tf_cc_framework>
+    $<TARGET_OBJECTS:tf_cc_while_loop>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<$<BOOL:${BOOL_WIN32}>:$<TARGET_OBJECTS:tf_core_kernels_cpu_only>>>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<TARGET_OBJECTS:tf_stream_executor>>
 )
@@ -92,6 +97,11 @@ add_executable(${summarize_graph}
     $<TARGET_OBJECTS:tf_core_direct_session>
     $<TARGET_OBJECTS:tf_tools_transform_graph_lib>
     $<TARGET_OBJECTS:tf_core_kernels>
+    $<TARGET_OBJECTS:tf_grappler>
+    $<TARGET_OBJECTS:tf_cc>
+    $<TARGET_OBJECTS:tf_cc_ops>
+    $<TARGET_OBJECTS:tf_cc_framework>
+    $<TARGET_OBJECTS:tf_cc_while_loop>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<$<BOOL:${BOOL_WIN32}>:$<TARGET_OBJECTS:tf_core_kernels_cpu_only>>>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<TARGET_OBJECTS:tf_stream_executor>>
 )
@@ -114,6 +124,11 @@ add_executable(${compare_graphs}
     $<TARGET_OBJECTS:tf_core_direct_session>
     $<TARGET_OBJECTS:tf_tools_transform_graph_lib>
     $<TARGET_OBJECTS:tf_core_kernels>
+    $<TARGET_OBJECTS:tf_grappler>
+    $<TARGET_OBJECTS:tf_cc>
+    $<TARGET_OBJECTS:tf_cc_ops>
+    $<TARGET_OBJECTS:tf_cc_framework>
+    $<TARGET_OBJECTS:tf_cc_while_loop>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<$<BOOL:${BOOL_WIN32}>:$<TARGET_OBJECTS:tf_core_kernels_cpu_only>>>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<TARGET_OBJECTS:tf_stream_executor>>
 )
@@ -135,6 +150,11 @@ add_executable(${benchmark_model}
     $<TARGET_OBJECTS:tf_core_ops>
     $<TARGET_OBJECTS:tf_core_direct_session>
     $<TARGET_OBJECTS:tf_core_kernels>
+    $<TARGET_OBJECTS:tf_grappler>
+    $<TARGET_OBJECTS:tf_cc>
+    $<TARGET_OBJECTS:tf_cc_ops>
+    $<TARGET_OBJECTS:tf_cc_framework>
+    $<TARGET_OBJECTS:tf_cc_while_loop>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<$<BOOL:${BOOL_WIN32}>:$<TARGET_OBJECTS:tf_core_kernels_cpu_only>>>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<TARGET_OBJECTS:tf_stream_executor>>
 )

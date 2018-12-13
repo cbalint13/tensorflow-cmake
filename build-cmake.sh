@@ -25,6 +25,8 @@ popd
 mkdir -p BUILD/cuda
 ln -sf /usr/local/cuda/include  BUILD/cuda/include
 
-mkdir -p BUILD/include/
+mkdir -p BUILD/include
 ln -sf /usr/include/json BUILD/include/json
 
+mkdir -p BUILD/third_party
+ln -sf /usr/include/nccl BUILD/third_party/nccl

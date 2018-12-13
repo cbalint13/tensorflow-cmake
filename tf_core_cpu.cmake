@@ -79,6 +79,9 @@ if (tensorflow_ENABLE_GPU)
     "${tensorflow_source_dir}/tensorflow/core/common_runtime/gpu_device_factory.cc"
     "${tensorflow_source_dir}/tensorflow/core/grappler/devices.h"
     "${tensorflow_source_dir}/tensorflow/core/grappler/devices.cc"
+    "${tensorflow_source_dir}/tensorflow/core/nccl/nccl_manager.h"
+    "${tensorflow_source_dir}/tensorflow/core/nccl/nccl_manager.cc"
+    "${tensorflow_source_dir}/tensorflow/core/nccl/nccl_rewrite.cc"
   )
   file(GLOB_RECURSE tf_core_gpu_exclude_srcs
      "${tensorflow_source_dir}/tensorflow/core/*test*.cc"

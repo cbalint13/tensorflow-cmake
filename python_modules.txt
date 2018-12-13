@@ -15,6 +15,16 @@ tensorflow/examples
 tensorflow/examples/tutorials
 tensorflow/examples/tutorials/mnist
 tensorflow/python
+tensorflow/python/autograph
+tensorflow/python/autograph/converters
+tensorflow/python/autograph/core
+tensorflow/python/autograph/impl
+tensorflow/python/autograph/lang
+tensorflow/python/autograph/operators
+tensorflow/python/autograph/pyct
+tensorflow/python/autograph/pyct/common_transformers
+tensorflow/python/autograph/pyct/static_analysis
+tensorflow/python/autograph/utils
 tensorflow/python/client
 tensorflow/python/compat
 tensorflow/python/data
@@ -43,6 +53,7 @@ tensorflow/python/keras/datasets
 tensorflow/python/keras/engine
 tensorflow/python/keras/estimator
 tensorflow/python/keras/layers
+tensorflow/python/keras/optimizer_v2
 tensorflow/python/keras/preprocessing
 tensorflow/python/keras/utils
 tensorflow/python/keras/wrappers
@@ -60,6 +71,9 @@ tensorflow/python/ops
 tensorflow/python/ops/distributions
 tensorflow/python/ops/linalg
 tensorflow/python/ops/losses
+tensorflow/python/ops/parallel_for
+tensorflow/python/ops/ragged
+tensorflow/python/ops/signal
 tensorflow/python/platform
 tensorflow/python/profiler
 tensorflow/python/profiler/internal
@@ -71,6 +85,7 @@ tensorflow/python/tools/api
 tensorflow/python/tools/api/generator
 tensorflow/python/training
 tensorflow/python/training/checkpointable
+tensorflow/python/training/saving
 tensorflow/python/user_ops
 tensorflow/python/util
 tensorflow/python/util/protobuf
@@ -282,10 +297,6 @@ tensorflow/contrib/linear_optimizer/kernels
 tensorflow/contrib/linear_optimizer/kernels/g3doc
 tensorflow/contrib/linear_optimizer/python
 tensorflow/contrib/linear_optimizer/python/ops
-tensorflow/contrib/lite
-tensorflow/contrib/lite/python
-tensorflow/contrib/lite/toco
-tensorflow/contrib/lite/toco/python
 tensorflow/contrib/lookup
 tensorflow/contrib/losses
 tensorflow/contrib/losses/python
@@ -445,3 +456,7 @@ tensorflow/contrib/training
 tensorflow/contrib/training/python
 tensorflow/contrib/training/python/training
 tensorflow/contrib/util
+tensorflow/lite
+tensorflow/lite/python
+tensorflow/lite/toco
+tensorflow/lite/toco/python

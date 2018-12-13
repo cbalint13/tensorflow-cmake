@@ -175,6 +175,7 @@ else()
   add_library(tf_python_protos_cc ${PROTO_SRCS} ${PROTO_HDRS})
 endif()
 add_dependencies(tf_python_protos_cc tf_protos_cc)
+target_link_libraries(tf_python_protos_cc PRIVATE tf_protos_cc)
 
 # tf_python_touchup_modules adds empty __init__.py files to all
 # directories containing Python code, so that Python will recognize
@@ -306,7 +307,7 @@ function(GENERATE_PYTHON_OP_LIB tf_python_op_lib_name)
     )
     target_link_libraries(${tf_python_op_lib_name}_gen_python PRIVATE
         tf_protos_cc
-                tf_python_protos_cc
+        tf_python_protos_cc
         ${tensorflow_EXTERNAL_LIBRARIES}
     )
 
@@ -351,9 +352,13 @@ GENERATE_PYTHON_OP_LIB("logging_ops")
 GENERATE_PYTHON_OP_LIB("lookup_ops")
 GENERATE_PYTHON_OP_LIB("manip_ops")
 GENERATE_PYTHON_OP_LIB("math_ops")
+GENERATE_PYTHON_OP_LIB("nccl_ops")
 GENERATE_PYTHON_OP_LIB("nn_ops")
 GENERATE_PYTHON_OP_LIB("no_op")
 GENERATE_PYTHON_OP_LIB("parsing_ops")
+GENERATE_PYTHON_OP_LIB("ragged_array_ops")
+GENERATE_PYTHON_OP_LIB("ragged_conversion_ops")
+GENERATE_PYTHON_OP_LIB("ragged_math_ops")
 GENERATE_PYTHON_OP_LIB("random_ops")
 GENERATE_PYTHON_OP_LIB("remote_fused_graph_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/remote_fused_graph/pylib/python/ops/gen_remote_fused_graph_ops.py)
@@ -371,6 +376,7 @@ GENERATE_PYTHON_OP_LIB("state_ops")
 GENERATE_PYTHON_OP_LIB("stateless_random_ops")
 GENERATE_PYTHON_OP_LIB("string_ops")
 GENERATE_PYTHON_OP_LIB("summary_ops")
+GENERATE_PYTHON_OP_LIB("tensor_forest_ops")
 GENERATE_PYTHON_OP_LIB("user_ops")
 GENERATE_PYTHON_OP_LIB("training_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/training/gen_training_ops.py)
@@ -758,7 +764,6 @@ STRING(REGEX MATCH "# BEGIN GENERATED FILES.*# END GENERATED FILES" api_init_fil
 string(REPLACE "# BEGIN GENERATED FILES" "" api_init_files_text ${api_init_files_text})
 string(REPLACE "# END GENERATED FILES" "" api_init_files_text ${api_init_files_text})
 string(REPLACE "," ";" api_init_files_list ${api_init_files_text})
-
 set(api_init_files "")
 foreach(api_init_file ${api_init_files_list})
     string(STRIP "${api_init_file}" api_init_file)
@@ -800,8 +805,9 @@ add_custom_command(
       # this step is running since the files aren't there yet.
       COMMAND ${CMAKE_COMMAND} -E remove -f ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/__init__.py
 
+
       # Run create_python_api.py to generate API init files.
-      COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/tf_python "${PY_RUNTIME_ENV}" ${PYTHON_EXECUTABLE}
+      COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/tf_python ${PY_RUNTIME_ENV} ${PYTHON_EXECUTABLE}
               "${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/tools/api/generator/create_python_api.py"
               "--root_init_template=${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/api_template.__init__.py"
               "--apidir=${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow"
@@ -817,50 +823,6 @@ add_custom_command(
 add_custom_target(tf_python_api SOURCES ${api_init_files})
 add_dependencies(tf_python_api tf_python_ops)
 
-# TODO(mikecase): This can be removed once tf.estimator is moved
-# out of TensorFlow.
-########################################################
-# Generate API __init__.py files for tf.estimator.
-########################################################
-
-# Parse tensorflow/python/tools/api/generator/BUILD to get list of generated files.
-FILE(READ ${tensorflow_source_dir}/tensorflow/python/tools/api/generator/api_init_files.bzl api_generator_BUILD_text)
-STRING(REGEX MATCH "# BEGIN GENERATED FILES.*# END GENERATED FILES" api_init_files_text ${api_generator_BUILD_text})
-string(REPLACE "# BEGIN GENERATED FILES" "" api_init_files_text ${api_init_files_text})
-string(REPLACE "# END GENERATED FILES" "" api_init_files_text ${api_init_files_text})
-string(REPLACE "," ";" api_init_files_list ${api_init_files_text})
-
-set(api_init_files "")
-foreach(api_init_file ${api_init_files_list})
-    string(STRIP "${api_init_file}" api_init_file)
-    if(api_init_file)
-        string(REPLACE "\"" "" api_init_file "${api_init_file}")  # Remove quotes
-        list(APPEND api_init_files "${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/estimator/api/${api_init_file}")
-    endif()
-endforeach(api_init_file)
-set(estimator_api_init_list_file "${tensorflow_source_dir}/estimator_api_init_files_list.txt")
-file(WRITE "${estimator_api_init_list_file}" "${api_init_files}")
-
-# Run create_python_api.py to generate __init__.py files.
-add_custom_command(
-      OUTPUT ${api_init_files}
-      DEPENDS tf_python_ops tf_python_copy_scripts_to_destination pywrap_tensorflow_internal tf_python_touchup_modules tf_extension_ops
-
-      # Run create_python_api.py to generate API init files.
-      COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/tf_python "${PY_RUNTIME_ENV}" ${PYTHON_EXECUTABLE}
-              "${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/tools/api/generator/create_python_api.py"
-              "--apidir=${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/estimator/api"
-              "--package=tensorflow.python.estimator.api"
-              "--apiname=estimator"
-          "--output_package=tensorflow.python.estimator.api"
-              "${estimator_api_init_list_file}"
-
-      COMMENT "Generating __init__.py files for Python API."
-      WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/tf_python"
-)
-
-add_custom_target(estimator_python_api SOURCES ${api_init_files})
-add_dependencies(estimator_python_api tf_python_ops)
 ############################################################
 # Build a PIP package containing the TensorFlow runtime.
 ############################################################
@@ -871,7 +833,6 @@ add_dependencies(tf_python_build_pip_package
     tf_python_touchup_modules
     tf_python_ops
     tf_python_api
-    estimator_python_api
     tf_extension_ops)
 
 # Fix-up Python files that were not included by the add_python_module() macros.
