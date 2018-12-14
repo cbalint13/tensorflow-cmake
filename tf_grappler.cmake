@@ -15,15 +15,30 @@
 ########################################################
 # tf_grappler library
 ########################################################
-file(GLOB tf_grappler_srcs
-   "${tensorflow_source_dir}/tensorflow/core/grappler/clusters/single_machine.cc"
-   "${tensorflow_source_dir}/tensorflow/core/grappler/clusters/single_machine.h"
-   "${tensorflow_source_dir}/tensorflow/python/grappler/cost_analyzer.cc"
-   "${tensorflow_source_dir}/tensorflow/python/grappler/cost_analyzer.h"
-   "${tensorflow_source_dir}/tensorflow/python/grappler/model_analyzer.cc"
-   "${tensorflow_source_dir}/tensorflow/python/grappler/model_analyzer.h"
- )
+file(GLOB_RECURSE tf_grappler_srcs
+    "${tensorflow_source_dir}/tensorflow/core/grappler/*.h"
+    "${tensorflow_source_dir}/tensorflow/core/grappler/*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/grappler/*/*.h"
+    "${tensorflow_source_dir}/tensorflow/core/grappler/*/*.cc"
+)
+
+file(GLOB_RECURSE tf_grappler_test_srcs
+    "${tensorflow_source_dir}/tensorflow/core/grappler/*test*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/grappler/*/*test*.cc"
+)
+list(REMOVE_ITEM tf_grappler_srcs ${tf_grappler_test_srcs})
+
+
+file(GLOB_RECURSE tf_grappler_gpu_srcs
+    "${tensorflow_source_dir}/tensorflow/core/grappler/devices.h"
+    "${tensorflow_source_dir}/tensorflow/core/grappler/devices.cc"
+)
+list(REMOVE_ITEM tf_grappler_srcs ${tf_grappler_gpu_srcs})
+
+if (tensorflow_ENABLE_GPU)
+  list(APPEND tf_grappler_srcs ${tf_grappler_gpu_srcs})
+endif()
 
 add_library(tf_grappler OBJECT ${tf_grappler_srcs})
 
-add_dependencies(tf_grappler tf_core_cpu)
+add_dependencies(tf_grappler tf_core_cpu tf_cc_ops)

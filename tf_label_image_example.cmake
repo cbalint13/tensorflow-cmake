@@ -23,9 +23,12 @@ add_executable(tf_label_image_example
     $<TARGET_OBJECTS:tf_core_framework>
     $<TARGET_OBJECTS:tf_core_kernels>
     $<TARGET_OBJECTS:tf_cc_framework>
+    $<TARGET_OBJECTS:tf_cc>
     $<TARGET_OBJECTS:tf_cc_ops>
     $<TARGET_OBJECTS:tf_core_ops>
     $<TARGET_OBJECTS:tf_core_direct_session>
+    $<TARGET_OBJECTS:tf_grappler>
+    $<TARGET_OBJECTS:tf_cc_while_loop>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<TARGET_OBJECTS:tf_stream_executor>>
 )
 

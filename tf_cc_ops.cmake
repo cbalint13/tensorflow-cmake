@@ -110,6 +110,8 @@ add_library(tf_cc_ops OBJECT
     "${tensorflow_source_dir}/tensorflow/cc/ops/standard_ops.h"
 )
 
+add_dependencies(tf_cc_ops create_cc_ops_header_dir)
+
 ########################################################
 # tf_cc_while_loop library
 ########################################################

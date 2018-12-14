@@ -26,10 +26,6 @@ file(GLOB_RECURSE tf_core_cpu_srcs
     "${tensorflow_source_dir}/tensorflow/core/distributed_runtime/server_lib.cc"
     "${tensorflow_source_dir}/tensorflow/core/graph/*.h"
     "${tensorflow_source_dir}/tensorflow/core/graph/*.cc"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/*.h"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/*.cc"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/*/*.h"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/*/*.cc"
     "${tensorflow_source_dir}/tensorflow/core/public/*.h"
 )
 
@@ -58,10 +54,6 @@ file(GLOB_RECURSE tf_core_cpu_exclude_srcs
     "${tensorflow_source_dir}/tensorflow/core/graph/tensor_id.cc"
     "${tensorflow_source_dir}/tensorflow/core/graph/while_context.h"
     "${tensorflow_source_dir}/tensorflow/core/graph/while_context.cc"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/clusters/single_machine.h"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/clusters/single_machine.cc"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/inputs/trivial_test_graph_input_yielder.h"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/inputs/trivial_test_graph_input_yielder.cc"
 )
 file(GLOB_RECURSE tf_core_cpu_whitelisted_srcs
     "${tensorflow_source_dir}/tensorflow/core/common_runtime/gpu/gpu_id.h"
@@ -77,8 +69,6 @@ if (tensorflow_ENABLE_GPU)
     "${tensorflow_source_dir}/tensorflow/core/platform/default/gpu/cupti_wrapper.cc"
     "${tensorflow_source_dir}/tensorflow/core/platform/default/device_tracer.cc"
     "${tensorflow_source_dir}/tensorflow/core/common_runtime/gpu_device_factory.cc"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/devices.h"
-    "${tensorflow_source_dir}/tensorflow/core/grappler/devices.cc"
     "${tensorflow_source_dir}/tensorflow/core/nccl/nccl_manager.h"
     "${tensorflow_source_dir}/tensorflow/core/nccl/nccl_manager.cc"
     "${tensorflow_source_dir}/tensorflow/core/nccl/nccl_rewrite.cc"

@@ -21,25 +21,6 @@
 #
 # The _pywrap_tensorflow_internal target builds everything.
 
-########################################################
-# Resolve installed dependencies
-########################################################
-
-# 1. Resolve the installed version of Python (for Python.h and python).
-# TODO(mrry): Parameterize the build script to enable Python 3 building.
-if(NOT PYTHON_INCLUDE_DIR)
-  set(PYTHON_NOT_FOUND false)
-  exec_program("${PYTHON_EXECUTABLE}"
-    ARGS "-c \"import distutils.sysconfig; print(distutils.sysconfig.get_python_inc())\""
-    OUTPUT_VARIABLE PYTHON_INCLUDE_DIR
-    RETURN_VALUE PYTHON_NOT_FOUND)
-  if(${PYTHON_NOT_FOUND})
-    message(FATAL_ERROR
-            "Cannot get Python include directory. Is distutils installed?")
-  endif(${PYTHON_NOT_FOUND})
-endif(NOT PYTHON_INCLUDE_DIR)
-FIND_PACKAGE(PythonLibs)
-
 # 2. Resolve the installed version of NumPy (for numpy/arrayobject.h).
 if(NOT NUMPY_INCLUDE_DIR)
   set(NUMPY_NOT_FOUND false)
@@ -491,6 +472,10 @@ set (pywrap_tensorflow_internal_src
     "${tensorflow_source_dir}/tensorflow/python/eager/pywrap_tfe.h"
     "${tensorflow_source_dir}/tensorflow/python/eager/pywrap_tensor.cc"
     "${tensorflow_source_dir}/tensorflow/python/eager/pywrap_tfe_src.cc"
+    "${tensorflow_source_dir}/tensorflow/python/grappler/cost_analyzer.h"
+    "${tensorflow_source_dir}/tensorflow/python/grappler/cost_analyzer.cc"
+    "${tensorflow_source_dir}/tensorflow/python/grappler/model_analyzer.h"
+    "${tensorflow_source_dir}/tensorflow/python/grappler/model_analyzer.cc"
     "${tensorflow_source_dir}/tensorflow/python/client/tf_session_helper.h"
     "${tensorflow_source_dir}/tensorflow/python/client/tf_session_helper.cc"
     "${tensorflow_source_dir}/tensorflow/python/client/session_ref.h"
@@ -946,21 +931,21 @@ endif (NOT systemlib_EIGEN3)
 if(${tensorflow_TF_NIGHTLY})
   if(${tensorflow_ENABLE_GPU})
     add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/tf_python/setup.py bdist_wheel --project_name tf_nightly_gpu
+      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/tf_python/setup.py bdist_egg --project_name tf_nightly_gpu
       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tf_python)
   else()
     add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/tf_python/setup.py bdist_wheel --project_name tf_nightly
+      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/tf_python/setup.py bdist_egg --project_name tf_nightly
       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tf_python)
   endif(${tensorflow_ENABLE_GPU})
 else()
   if(${tensorflow_ENABLE_GPU})
     add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/tf_python/setup.py bdist_wheel --project_name tensorflow_gpu
+      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/tf_python/setup.py bdist_egg --project_name tensorflow_gpu
       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tf_python)
   else()
     add_custom_command(TARGET tf_python_build_pip_package POST_BUILD
-      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/tf_python/setup.py bdist_wheel
+      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/tf_python/setup.py bdist_egg
       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tf_python)
   endif(${tensorflow_ENABLE_GPU})
 endif(${tensorflow_TF_NIGHTLY})
