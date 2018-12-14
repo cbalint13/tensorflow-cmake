@@ -481,15 +481,19 @@ if (tensorflow_ENABLE_GPU)
   endforeach()
 
   # create cuda_config.h
-  FILE(WRITE ${tensorflow_source_dir}/third_party/gpus/cuda/cuda_config.h
-    "#ifndef CUDA_CUDA_CONFIG_H_\n"
-    "#define CUDA_CUDA_CONFIG_H_\n"
-    "#define TF_CUDA_CAPABILITIES ${TF_CUDA_CAP}\n"
-    "#define TF_CUDA_VERSION \"64_${short_CUDA_VER}\"\n"
-    "#define TF_CUDNN_VERSION \"64_${CUDNN_VERSION}\"\n"
-    "#define TF_CUDA_TOOLKIT_PATH \"${CUDA_TOOLKIT_ROOT_DIR}\"\n"
-    "#endif  // CUDA_CUDA_CONFIG_H_\n"
-  )
+  if(NOT EXISTS "${tensorflow_source_dir}/third_party/gpus/cuda/cuda_config.h")
+    file(WRITE ${tensorflow_source_dir}/third_party/gpus/cuda/cuda_config.h
+      "#ifndef CUDA_CUDA_CONFIG_H_\n"
+      "#define CUDA_CUDA_CONFIG_H_\n"
+      "#define TF_CUDA_CAPABILITIES ${TF_CUDA_CAP}\n"
+      "#define TF_CUDA_VERSION \"64_${short_CUDA_VER}\"\n"
+      "#define TF_CUDNN_VERSION \"64_${CUDNN_VERSION}\"\n"
+      "#define TF_CUDA_TOOLKIT_PATH \"${CUDA_TOOLKIT_ROOT_DIR}\"\n"
+      "#endif  // CUDA_CUDA_CONFIG_H_\n"
+    )
+  else()
+    message("cuda_config.h already generated (cached)")
+  endif()
 
   # tf assumes in various places header files to be in cuda/include. On windows the cuda sdk
   # installs them under cuda/version/include and to avoid that we need to change tf we copy a

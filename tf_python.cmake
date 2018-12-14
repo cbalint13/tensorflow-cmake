@@ -150,11 +150,7 @@ RELATIVE_PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS
     ${tensorflow_source_dir} ${tf_python_protos_cc_srcs}
 )
 
-if(tensorflow_BUILD_SHARED_LIB)
-  add_library(tf_python_protos_cc SHARED ${PROTO_SRCS} ${PROTO_HDRS})
-else()
-  add_library(tf_python_protos_cc ${PROTO_SRCS} ${PROTO_HDRS})
-endif()
+add_library(tf_python_protos_cc OBJECT ${PROTO_SRCS} ${PROTO_HDRS})
 add_dependencies(tf_python_protos_cc tf_protos_cc)
 target_link_libraries(tf_python_protos_cc PRIVATE tf_protos_cc)
 
@@ -588,24 +584,6 @@ endif(WIN32)
 # tf_python/tensorflow/python/.
 add_library(pywrap_tensorflow_internal SHARED
     ${pywrap_tensorflow_internal_src}
-    $<TARGET_OBJECTS:tf_c>
-    $<TARGET_OBJECTS:tf_c_eager>
-    $<TARGET_OBJECTS:tf_c_python_api>
-    $<TARGET_OBJECTS:tf_core_lib>
-    $<TARGET_OBJECTS:tf_core_cpu>
-    $<TARGET_OBJECTS:tf_core_framework>
-    $<TARGET_OBJECTS:tf_core_profiler>
-    $<TARGET_OBJECTS:tf_cc>
-    $<TARGET_OBJECTS:tf_cc_ops>
-    $<TARGET_OBJECTS:tf_cc_while_loop>
-    $<TARGET_OBJECTS:tf_core_ops>
-    $<TARGET_OBJECTS:tf_core_direct_session>
-    $<TARGET_OBJECTS:tf_grappler>
-    $<TARGET_OBJECTS:tf_tools_transform_graph_lib>
-    $<$<BOOL:${tensorflow_ENABLE_GRPC_SUPPORT}>:$<TARGET_OBJECTS:tf_core_distributed_runtime>>
-    $<TARGET_OBJECTS:tf_core_kernels>
-    $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<$<BOOL:${BOOL_WIN32}>:$<TARGET_OBJECTS:tf_core_kernels_cpu_only>>>
-    $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<TARGET_OBJECTS:tf_stream_executor>>
     ${pywrap_tensorflow_deffile}
 )
 
@@ -625,10 +603,9 @@ target_include_directories(pywrap_tensorflow_internal PUBLIC
 )
 
 target_link_libraries(pywrap_tensorflow_internal PRIVATE
-    ${tf_core_gpu_kernels_lib}
-    ${tensorflow_EXTERNAL_LIBRARIES}
-    tf_protos_cc
+    tensorflow
     tf_python_protos_cc
+    ${tensorflow_EXTERNAL_LIBRARIES}
     ${PYTHON_LIBRARIES}
 )
 

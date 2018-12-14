@@ -88,9 +88,3 @@ add_library(tf_stream_executor OBJECT ${tf_stream_executor_srcs})
 add_dependencies(tf_stream_executor
     tf_core_lib
 )
-#target_link_libraries(tf_stream_executor
-#    ${CMAKE_THREAD_LIBS_INIT}
-#    ${PROTOBUF_LIBRARIES}
-#    tf_protos_cc
-#    tf_core_lib
-#)
