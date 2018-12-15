@@ -202,11 +202,7 @@ endif (WIN32)
 if (tensorflow_ENABLE_GPU)
   set_source_files_properties(${tf_core_gpu_kernels_srcs} PROPERTIES CUDA_SOURCE_PROPERTY_FORMAT OBJ)
   set(tf_core_gpu_kernels_lib tf_core_gpu_kernels)
-  if(tensorflow_BUILD_SHARED_LIB)
-    cuda_add_library(${tf_core_gpu_kernels_lib} SHARED ${tf_core_gpu_kernels_srcs})
-  else()
-    cuda_add_library(${tf_core_gpu_kernels_lib} STATIC ${tf_core_gpu_kernels_srcs})
-  endif()
+  cuda_add_library(${tf_core_gpu_kernels_lib} STATIC ${tf_core_gpu_kernels_srcs})
   set_target_properties(${tf_core_gpu_kernels_lib}
                         PROPERTIES DEBUG_POSTFIX ""
                         COMPILE_FLAGS "${TF_REGULAR_CXX_FLAGS}"

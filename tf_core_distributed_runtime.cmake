@@ -50,7 +50,7 @@ add_executable(grpc_tensorflow_server
     ${grpc_tensorflow_server_srcs}
 )
 
-target_link_libraries(grpc_tensorflow_server PUBLIC
+target_link_libraries(grpc_tensorflow_server PRIVATE
     tensorflow
     ${tensorflow_EXTERNAL_LIBRARIES}
 )

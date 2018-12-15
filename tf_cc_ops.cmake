@@ -66,10 +66,10 @@ foreach(tf_cc_op_lib_name ${tf_cc_op_lib_names})
         $<TARGET_OBJECTS:tf_${tf_cc_op_lib_name}>
         $<TARGET_OBJECTS:tf_core_lib>
         $<TARGET_OBJECTS:tf_core_framework>
+        $<TARGET_OBJECTS:tf_protos_cc>
     )
 
     target_link_libraries(${tf_cc_op_lib_name}_gen_cc PRIVATE
-        tf_protos_cc
         ${tensorflow_EXTERNAL_LIBRARIES}
     )
 
@@ -178,10 +178,10 @@ function(AddUserOps)
   endif()
   # create shared library from source and cuda obj
   add_library(${_AT_TARGET} SHARED ${_AT_SOURCES} ${gpu_lib})
-  target_link_libraries(${_AT_TARGET} ${pywrap_tensorflow_lib})
+  target_link_libraries(${_AT_TARGET} PRIVATE ${pywrap_tensorflow_lib})
   if (tensorflow_ENABLE_GPU AND _AT_GPUSOURCES)
       # some ops call out to cuda directly; need to link libs for the cuda dlls
-      target_link_libraries(${_AT_TARGET} ${CUDA_LIBRARIES})
+      target_link_libraries(${_AT_TARGET} PRIVATE ${CUDA_LIBRARIES})
   endif()
   if (_AT_DISTCOPY)
       add_custom_command(TARGET ${_AT_TARGET} POST_BUILD

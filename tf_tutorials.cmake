@@ -20,7 +20,7 @@ add_executable(tf_tutorials_example_trainer
     ${tf_tutorials_example_trainer_srcs}
 )
 
-target_link_libraries(tf_tutorials_example_trainer PUBLIC
+target_link_libraries(tf_tutorials_example_trainer PRIVATE
     tensorflow
     ${tensorflow_EXTERNAL_LIBRARIES}
 )

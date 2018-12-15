@@ -152,7 +152,7 @@ RELATIVE_PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS
 
 add_library(tf_python_protos_cc OBJECT ${PROTO_SRCS} ${PROTO_HDRS})
 add_dependencies(tf_python_protos_cc tf_protos_cc)
-target_link_libraries(tf_python_protos_cc PRIVATE tf_protos_cc)
+#target_link_libraries(tf_python_protos_cc PRIVATE tf_protos_cc)
 
 # tf_python_touchup_modules adds empty __init__.py files to all
 # directories containing Python code, so that Python will recognize
@@ -276,15 +276,15 @@ function(GENERATE_PYTHON_OP_LIB tf_python_op_lib_name)
     # registrations and generates Python wrapper code based on the
     # registered ops.
     add_executable(${tf_python_op_lib_name}_gen_python
+        $<TARGET_OBJECTS:tf_core_lib>
+        $<TARGET_OBJECTS:tf_protos_cc>
+        $<TARGET_OBJECTS:tf_core_framework>
+        $<TARGET_OBJECTS:tf_python_protos_cc>
         $<TARGET_OBJECTS:tf_python_op_gen_main>
         $<TARGET_OBJECTS:tf_${tf_python_op_lib_name}>
-        $<TARGET_OBJECTS:tf_core_lib>
-        $<TARGET_OBJECTS:tf_core_framework>
         ${GENERATE_PYTHON_OP_LIB_ADDITIONAL_LIBRARIES}
     )
     target_link_libraries(${tf_python_op_lib_name}_gen_python PRIVATE
-        tf_protos_cc
-        tf_python_protos_cc
         ${tensorflow_EXTERNAL_LIBRARIES}
     )
 
@@ -463,8 +463,6 @@ add_dependencies(
   tf_python_protos_cc)
 
 set (pywrap_tensorflow_internal_src
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/print_model_analysis.h"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/print_model_analysis.cc"
     "${tensorflow_source_dir}/tensorflow/python/eager/pywrap_tfe.h"
     "${tensorflow_source_dir}/tensorflow/python/eager/pywrap_tensor.cc"
     "${tensorflow_source_dir}/tensorflow/python/eager/pywrap_tfe_src.cc"
@@ -550,17 +548,13 @@ if(WIN32)
         ${PYTHON_INCLUDE_DIR}
         ${NUMPY_INCLUDE_DIR}
     )
-    #target_link_libraries(pywrap_tensorflow_internal_static
-    #   tf_protos_cc
-    #   tf_python_protos_cc
-    #)
     add_dependencies(pywrap_tensorflow_internal_static tf_protos_cc tf_python_protos_cc)
     set(pywrap_tensorflow_internal_static_dependencies
         $<TARGET_FILE:pywrap_tensorflow_internal_static>
-        $<TARGET_FILE:tf_protos_cc>
         $<TARGET_FILE:tf_python_protos_cc>
     ${nsync_STATIC_LIBRARIES}
     )
+#        $<TARGET_FILE:tf_protos_cc>
 
     if(${CMAKE_GENERATOR} MATCHES "Visual Studio.*")
         set(pywrap_tensorflow_deffile "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/pywrap_tensorflow.def")
@@ -604,8 +598,8 @@ target_include_directories(pywrap_tensorflow_internal PUBLIC
 
 target_link_libraries(pywrap_tensorflow_internal PRIVATE
     tensorflow
-    tf_python_protos_cc
-    ${tensorflow_EXTERNAL_LIBRARIES}
+    $<TARGET_OBJECTS:tf_c_python_api>
+    $<TARGET_OBJECTS:tf_python_protos_cc>
     ${PYTHON_LIBRARIES}
 )
 
@@ -769,7 +763,7 @@ add_custom_command(
 
 
       # Run create_python_api.py to generate API init files.
-      COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/tf_python ${PY_RUNTIME_ENV} ${PYTHON_EXECUTABLE}
+      COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/tf_python LD_LIBRARY_PATH=${CMAKE_CURRENT_BINARY_DIR} ${PY_RUNTIME_ENV} ${PYTHON_EXECUTABLE}
               "${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/python/tools/api/generator/create_python_api.py"
               "--root_init_template=${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/api_template.__init__.py"
               "--apidir=${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow"

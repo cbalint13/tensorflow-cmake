@@ -7,6 +7,7 @@ pushd BUILD
 
 cmake .. \
       -Dsystemlib_ALL=ON \
+      -DCMAKE_SKIP_RPATH=ON \
       -Dtensorflow_BUILD_SHARED_LIB=ON \
       -Dtensorflow_ENABLE_POSITION_INDEPENDENT_CODE=ON \
       -Dtensorflow_ENABLE_GPU=ON \

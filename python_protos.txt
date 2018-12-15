@@ -1,6 +1,5 @@
 tensorflow/core
 tensorflow/core/kernels/boosted_trees
-tensorflow/core/profiler
 tensorflow/python
 tensorflow/contrib/boosted_trees/proto
 tensorflow/contrib/cloud/kernels

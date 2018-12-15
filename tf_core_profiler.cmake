@@ -16,21 +16,22 @@
 # tf_core_profiler library
 ########################################################
 file(GLOB_RECURSE tf_core_profiler_srcs
-    "${tensorflow_source_dir}/tensorflow/core/profiler/*.proto"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/tfprof_options.h"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/tfprof_options.cc"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/*.h"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/*.cc"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/advisor/*.h"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/advisor/*.cc"
     "${tensorflow_source_dir}/tensorflow/core/platform/regexp.h"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*.h"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*/*.h"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*/*.cc"
 )
 
 file(GLOB_RECURSE tf_core_profiler_exclude_srcs
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/*test.cc"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/advisor/*test.cc"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/print_model_analysis.cc"
-    "${tensorflow_source_dir}/tensorflow/core/profiler/internal/print_model_analysis.h"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*test*.h"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*test*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*/*test*.h"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*/*/*test*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*pb.h"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*pb.cc"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*/*pb.h"
+    "${tensorflow_source_dir}/tensorflow/core/profiler/*/*/*pb.cc"
 )
 list(REMOVE_ITEM tf_core_profiler_srcs ${tf_core_profiler_exclude_srcs})
 

@@ -20,7 +20,7 @@ add_executable(tf_label_image_example
     ${tf_label_image_example_srcs}
 )
 
-target_link_libraries(tf_label_image_example PUBLIC
+target_link_libraries(tf_label_image_example PRIVATE
     tensorflow
     ${tensorflow_EXTERNAL_LIBRARIES}
 )

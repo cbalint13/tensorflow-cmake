@@ -71,7 +71,7 @@ function(AddTest)
   endif(_AT_DEPENDS)
 
   add_executable(${_AT_TARGET} ${_AT_SOURCES} ${_AT_OBJECTS})
-  target_link_libraries(${_AT_TARGET} ${_AT_LIBS})
+  target_link_libraries(${_AT_TARGET} PRIVATE ${_AT_LIBS})
 
   GetTestRunPath(testdir ${_AT_TARGET})
   set(tempdir "${testdir}/tmp")
@@ -524,11 +524,11 @@ if (tensorflow_BUILD_CC_TESTS)
     $<TARGET_OBJECTS:tf_cc_ops>
     $<TARGET_OBJECTS:tf_core_ops>
     $<TARGET_OBJECTS:tf_core_direct_session>
+    $<TARGET_OBJECTS:tf_protos_cc>
     $<$<BOOL:${tensorflow_ENABLE_GPU}>:$<TARGET_OBJECTS:tf_stream_executor>>
   )
 
   set(tf_test_libs
-    tf_protos_cc
     tf_test_lib
     ${tf_core_gpu_kernels_lib}
     ${googletest_STATIC_LIBRARIES}
