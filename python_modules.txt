@@ -11,6 +11,8 @@ tensorflow/core/lib/core
 tensorflow/core/profiler
 tensorflow/core/protobuf
 tensorflow/core/util
+tensorflow/compiler/xla/python
+tensorflow/compiler/xla/python_api
 tensorflow/examples
 tensorflow/examples/tutorials
 tensorflow/examples/tutorials/mnist

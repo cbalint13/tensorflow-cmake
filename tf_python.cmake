@@ -507,6 +507,10 @@ set (pywrap_tensorflow_internal_src
     "${tensorflow_source_dir}/tensorflow/python/util/util.cc"
     "${tensorflow_source_dir}/tensorflow/cc/framework/ops.cc"
     "${tensorflow_source_dir}/tensorflow/cc/framework/scope.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/xla/python/local_computation_builder.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/xla/python/local_computation_builder.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/xla/python/numpy_bridge.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/xla/python/numpy_bridge.cc"
     "${CMAKE_CURRENT_BINARY_DIR}/pywrap_tensorflow_internal.cc"
 )
 

@@ -17,73 +17,107 @@
 # tf_gen_op_wrapper_cc executables
 ########################################################
 
-# create directory for ops generated files
-#set(compiler_ops_target_dir ${CMAKE_CURRENT_BINARY_DIR}/tensorflow/compiler/tf2xla/cc/ops)
-#add_custom_target(create_compiler_ops_header_dir
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${compiler_ops_target_dir}
-#)
-#set(tf_compiler_ops_generated_files)
-#add_executable(xla_ops_gen_cc
-#        $<TARGET_OBJECTS:tf_cc_op_gen_main>
-#        "${tensorflow_source_dir}/tensorflow/compiler/jit/ops/xla_ops.cc"
-#        $<TARGET_OBJECTS:tf_core_lib>
-#        $<TARGET_OBJECTS:tf_core_framework>
-#        $<TARGET_OBJECTS:tf_protos_cc>
-#)
-#target_link_libraries(xla_ops_gen_cc PRIVATE
-#        ${tensorflow_EXTERNAL_LIBRARIES}
-#)
-#set(compiler_ops_include_internal 0)
-#
-#    if(NOT EXISTS "${compiler_ops_target_dir}/xla_jit_ops.h" OR
-#       NOT EXISTS "${compiler_ops_target_dir}/xla_jit_ops.cc" OR
-#       NOT EXISTS "${compiler_ops_target_dir}/xla_jit_ops_internal.h" OR
-#       NOT EXISTS "${compiler_ops_target_dir}/xla_jit_ops_internal.cc")
-#      add_custom_command(
-#          OUTPUT ${compiler_ops_target_dir}/xla_jit_ops.h
-#                 ${compiler_ops_target_dir}/xla_jit_ops.cc
-#                 ${compiler_ops_target_dir}/xla_jit_ops_internal.h
-#                 ${compiler_ops_target_dir}/xla_jit_ops_internal.cc
-#          COMMAND xla_ops_gen_cc ${compiler_ops_target_dir}/xla_jit_ops.h ${compiler_ops_target_dir}/xla_jit_ops.cc ${compiler_ops_include_internal} ${tensorflow_source_dir}/tensorflow/core/api_def/base_api
-#          DEPENDS xla_ops_gen_cc create_compiler_ops_header_dir
-#      )
-#    endif()
-#
-#    list(APPEND tf_compiler_ops_generated_files ${compiler_ops_target_dir}/xla_jit_ops.h)
-#    list(APPEND tf_compiler_ops_generated_files ${compiler_ops_target_dir}/xla_jit_ops.cc)
-#    list(APPEND tf_compiler_ops_generated_files ${compiler_ops_target_dir}/xla_jit_ops_internal.h)
-#    list(APPEND tf_compiler_ops_generated_files ${compiler_ops_target_dir}/xla_jit_ops_internal.cc)
+file(GLOB compiler_ops_gen_targets
+  "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_compile_ops.cc"
+  "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_execute_op.cc"
+  "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_state_ops.cc"
+  "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/ops/xla_ops.cc"
+  "${tensorflow_source_dir}/tensorflow/compiler/jit/ops/xla_ops.cc"
+)
+
+set(tf_compiler_ops_generated_files)
+foreach(compiler_ops_gen_target ${compiler_ops_gen_targets})
+
+    # basic names
+    get_filename_component(compiler_ops_gen_path "${compiler_ops_gen_target}" DIRECTORY)
+    get_filename_component(compiler_ops_gen_file "${compiler_ops_gen_target}" NAME)
+    get_filename_component(compiler_ops_gen_name "${compiler_ops_gen_target}" NAME_WE)
+
+    # composite unique name
+    get_filename_component(compiler_ops_gen_short "${compiler_ops_gen_path}" DIRECTORY)
+    get_filename_component(compiler_ops_gen_short "${compiler_ops_gen_short}" NAME)
+
+    set(compiler_ops_gen_label "${compiler_ops_gen_name}_${compiler_ops_gen_short}")
+
+    string(REPLACE "${tensorflow_source_dir}/" "" compiler_ops_target_dir "${compiler_ops_gen_path}")
+    string(REPLACE "/ops" "/cc/ops" compiler_ops_target_dir "${compiler_ops_target_dir}")
+
+    file(GLOB tf_${compiler_ops_gen_label}_srcs "${compiler_ops_gen_target}")
+
+    set(compiler_ops_include_internal 0)
+    if(${compiler_ops_gen_label} STREQUAL "xla_ops_jit")
+        set(compiler_ops_include_internal 1)
+    endif()
+
+    add_library(tf_${compiler_ops_gen_label} OBJECT ${tf_${compiler_ops_gen_label}_srcs})
+    add_dependencies(tf_${compiler_ops_gen_label} tf_core_framework)
+
+    add_executable(${compiler_ops_gen_label}_gen_cc
+        $<TARGET_OBJECTS:tf_cc_op_gen_main>
+        $<TARGET_OBJECTS:tf_${compiler_ops_gen_label}>
+        $<TARGET_OBJECTS:tf_core_lib>
+        $<TARGET_OBJECTS:tf_core_framework>
+        $<TARGET_OBJECTS:tf_protos_cc>
+    )
+    target_link_libraries(${compiler_ops_gen_label}_gen_cc PRIVATE
+        ${tensorflow_EXTERNAL_LIBRARIES}
+    )
+
+    set(compiler_ops_target_dir ${CMAKE_CURRENT_BINARY_DIR}/${compiler_ops_target_dir})
+
+    add_custom_target(${compiler_ops_gen_label}_header_dir
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${compiler_ops_target_dir}
+    )
+
+    if(NOT EXISTS "${compiler_ops_target_dir}/${compiler_ops_gen_name}.h" OR
+       NOT EXISTS "${compiler_ops_target_dir}/${compiler_ops_gen_name}.cc" OR
+       NOT EXISTS "${compiler_ops_target_dir}/${compiler_ops_gen_name}_internal.h" OR
+       NOT EXISTS "${compiler_ops_target_dir}/${compiler_ops_gen_name}_internal.cc")
+    add_custom_command(
+          OUTPUT ${compiler_ops_target_dir}/${compiler_ops_gen_name}.h
+                 ${compiler_ops_target_dir}/${compiler_ops_gen_name}.cc
+                 ${compiler_ops_target_dir}/${compiler_ops_gen_name}_internal.h
+                 ${compiler_ops_target_dir}/${compiler_ops_gen_name}_internal.cc
+          COMMAND ${compiler_ops_gen_label}_gen_cc ${compiler_ops_target_dir}/${compiler_ops_gen_name}.h ${compiler_ops_target_dir}/${compiler_ops_gen_name}.cc ${compiler_ops_include_internal} ${tensorflow_source_dir}/tensorflow/core/api_def/base_api
+          DEPENDS ${compiler_ops_gen_label}_gen_cc ${compiler_ops_gen_label}_header_dir
+    )
+    endif()
+
+    list(APPEND tf_compiler_ops_generated_files ${compiler_ops_target_dir}/${compiler_ops_gen_name}.h)
+    list(APPEND tf_compiler_ops_generated_files ${compiler_ops_target_dir}/${compiler_ops_gen_name}.cc)
+    list(APPEND tf_compiler_ops_generated_files ${compiler_ops_target_dir}/${compiler_ops_gen_name}_internal.h)
+    list(APPEND tf_compiler_ops_generated_files ${compiler_ops_target_dir}/${compiler_ops_gen_name}_internal.cc)
+endforeach()
 
 ########################################################
 # tf_compiler library
 ########################################################
 
+file(GLOB_RECURSE tf_compiler_srcs
+    "${tensorflow_source_dir}/tensorflow/compiler/xla/*.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/xla/*.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/xrt/*.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/xrt/*.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/*.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/*.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/jit/*.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/jit/*.cc"
+)
+
 if(tensorflow_ENABLE_EXPERIMENTAL)
-  file(GLOB_RECURSE tf_compiler_srcs
+  file(GLOB_RECURSE tf_compiler_experimental_srcs
       "${tensorflow_source_dir}/tensorflow/compiler/aot/*.h"
       "${tensorflow_source_dir}/tensorflow/compiler/aot/*.cc"
-      "${tensorflow_source_dir}/tensorflow/compiler/jit/*.h"
-      "${tensorflow_source_dir}/tensorflow/compiler/jit/*.cc"
-      "${tensorflow_source_dir}/tensorflow/compiler/xla/*.h"
-      "${tensorflow_source_dir}/tensorflow/compiler/xla/*.cc"
-      "${tensorflow_source_dir}/tensorflow/compiler/xrt/*.h"
-      "${tensorflow_source_dir}/tensorflow/compiler/xrt/*.cc"
-      "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/*.h"
-      "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/*.cc"
   )
-else()
-  set(tf_compiler_srcs
-      "${tensorflow_source_dir}/tensorflow/compiler/xla/parse_flags_from_env.cc"
-      "${tensorflow_source_dir}/tensorflow/compiler/xla/parse_flags_from_env.h"
-  )
+  list(APPEND tf_compiler_srcs ${tf_compiler_experimental_srcs})
 endif()
 
+#    "${tensorflow_source_dir}/tensorflow/compiler/jit/node_matchers.*"
 file(GLOB_RECURSE tf_compiler_srcs_exclude
+    "${tensorflow_source_dir}/tensorflow/compiler/*/ops/*"
     "${tensorflow_source_dir}/tensorflow/compiler/*/python/*"
     "${tensorflow_source_dir}/tensorflow/compiler/*/*_main.cc"
-    "${tensorflow_source_dir}/tensorflow/compiler/jit/ops/*"
-    "${tensorflow_source_dir}/tensorflow/compiler/jit/node_matchers.*"
-    "${tensorflow_source_dir}/tensorflow/compiler/xla/tests/*"
+    "${tensorflow_source_dir}/tensorflow/compiler/jit/node_matchers.cc"
     "${tensorflow_source_dir}/tensorflow/compiler/xla/tools/*computation*"
     "${tensorflow_source_dir}/tensorflow/compiler/xla/tools/show_*.cc"
     "${tensorflow_source_dir}/tensorflow/compiler/xla/tools/*_to_*.cc"
@@ -102,6 +136,7 @@ list(REMOVE_ITEM tf_compiler_srcs ${tf_compiler_srcs_exclude})
 file(GLOB_RECURSE tf_compiler_test_srcs
     "${tensorflow_source_dir}/tensorflow/compiler/*test*.h"
     "${tensorflow_source_dir}/tensorflow/compiler/*test*.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/*/tests/*"
 )
 list(REMOVE_ITEM tf_compiler_srcs ${tf_compiler_test_srcs})
 
