@@ -48,8 +48,6 @@ else (systemlib_EIGEN3)
       endif()
   endforeach()
 
-  set(eigen_url "https://bitbucket.org/eigen/eigen/get/729d33d11c81.tar.gz")
-
   set(eigen_INCLUDE_DIRS
       ${CMAKE_CURRENT_BINARY_DIR}
       ${CMAKE_CURRENT_BINARY_DIR}/external/eigen_archive
