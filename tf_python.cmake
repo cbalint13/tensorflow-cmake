@@ -307,6 +307,7 @@ GENERATE_PYTHON_OP_LIB("bitwise_ops")
 GENERATE_PYTHON_OP_LIB("boosted_trees_ops")
 GENERATE_PYTHON_OP_LIB("candidate_sampling_ops")
 GENERATE_PYTHON_OP_LIB("checkpoint_ops")
+GENERATE_PYTHON_OP_LIB("clustering_ops")
 GENERATE_PYTHON_OP_LIB("collective_ops")
 GENERATE_PYTHON_OP_LIB("control_flow_ops"
   ADDITIONAL_LIBRARIES $<TARGET_OBJECTS:tf_no_op>)
@@ -373,8 +374,6 @@ GENERATE_PYTHON_OP_LIB("contrib_boosted_trees_stats_accumulator_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/boosted_trees/python/ops/gen_stats_accumulator_ops.py)
 GENERATE_PYTHON_OP_LIB("contrib_coder_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/coder/python/ops/gen_coder_ops.py)
-GENERATE_PYTHON_OP_LIB("contrib_factorization_clustering_ops"
-  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/factorization/python/ops/gen_clustering_ops.py)
 GENERATE_PYTHON_OP_LIB("contrib_factorization_factorization_ops"
   DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tf_python/tensorflow/contrib/factorization/python/ops/gen_factorization_ops.py)
 GENERATE_PYTHON_OP_LIB("contrib_framework_variable_ops"
@@ -537,6 +536,7 @@ if(WIN32)
         $<TARGET_OBJECTS:tf_core_eager_runtime>
         $<TARGET_OBJECTS:tf_core_direct_session>
         $<TARGET_OBJECTS:tf_grappler>
+        $<TARGET_OBJECTS:tf_compiler>
         $<TARGET_OBJECTS:tf_tools_transform_graph_lib>
         $<$<BOOL:${tensorflow_ENABLE_GRPC_SUPPORT}>:$<TARGET_OBJECTS:tf_core_distributed_runtime>>
         $<TARGET_OBJECTS:tf_core_kernels>

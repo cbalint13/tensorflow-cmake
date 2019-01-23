@@ -16,19 +16,20 @@ if (systemlib_ABSEIL_CPP)
 
   find_package(AbseilCpp REQUIRED
                absl_base
-               absl_internal_spinlock_wait
-               absl_dynamic_annotations
-               absl_internal_malloc_internal
-               absl_internal_throw_delegate
                absl_int128
                absl_strings
+               absl_dynamic_annotations
+               absl_internal_spinlock_wait
+               absl_internal_malloc_internal
+               absl_internal_throw_delegate
+               absl_internal_hashtablez_sampler
                str_format_internal
                absl_bad_optional_access
                absl_hash
                absl_internal_city
-               absl_container
                absl_synchronization
-               absl_variant)
+               absl_variant
+               absl_raw_hash_set)
 
   include_directories(${ABSEIL_CPP_INCLUDE_DIR})
   list(APPEND tensorflow_EXTERNAL_LIBRARIES ${ABSEIL_CPP_LIBRARIES})

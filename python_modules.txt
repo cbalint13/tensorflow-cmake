@@ -68,6 +68,7 @@ tensorflow/python/layers
 tensorflow/python/lib
 tensorflow/python/lib/core
 tensorflow/python/lib/io
+tensorflow/python/module
 tensorflow/python/ops
 tensorflow/python/ops/distributions
 tensorflow/python/ops/linalg

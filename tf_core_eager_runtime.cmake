@@ -28,10 +28,9 @@ file(GLOB_RECURSE tf_core_eager_runtime_exclude_srcs
 list(REMOVE_ITEM tf_core_eager_runtime_srcs ${tf_core_eager_runtime_exclude_srcs})
 
 add_library(tf_core_eager_runtime OBJECT ${tf_core_eager_runtime_srcs})
-add_dependencies(
-  tf_core_eager_runtime
-  tf_c
-  tf_core_lib)
+add_dependencies(tf_core_eager_runtime
+    tf_c
+    tf_core_lib)
 
 
 file(GLOB_RECURSE tf_c_eager_srcs
@@ -47,11 +46,10 @@ file(GLOB_RECURSE tf_c_eager_exlclude_srcs
 list(REMOVE_ITEM tf_c_eager_srcs ${tf_c_eager_exlclude_srcs})
 
 add_library(tf_c_eager OBJECT ${tf_c_eager_srcs})
-add_dependencies(
-  tf_c_eager
-  tf_core_eager_runtime
-  tf_c
-  tf_cc_framework
-  tf_cc_while_loop
-  tf_core_lib
-  tf_protos_cc)
+add_dependencies(tf_c_eager
+    tf_core_eager_runtime
+    tf_c
+    tf_cc_framework
+    tf_cc_while_loop
+    tf_core_lib
+    tf_protos_cc)

@@ -18,11 +18,15 @@
 set(tf_c_srcs
     "${tensorflow_source_dir}/tensorflow/c/c_api.cc"
     "${tensorflow_source_dir}/tensorflow/c/c_api.h"
+    "${tensorflow_source_dir}/tensorflow/c/c_api_experimental.cc"
+    "${tensorflow_source_dir}/tensorflow/c/c_api_experimental.h"
     "${tensorflow_source_dir}/tensorflow/c/c_api_function.cc"
     "${tensorflow_source_dir}/tensorflow/c/checkpoint_reader.cc"
     "${tensorflow_source_dir}/tensorflow/c/checkpoint_reader.h"
     "${tensorflow_source_dir}/tensorflow/c/tf_status_helper.cc"
     "${tensorflow_source_dir}/tensorflow/c/tf_status_helper.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/jit/flags.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/jit/flags.h"
 )
 
 add_library(tf_c OBJECT ${tf_c_srcs})

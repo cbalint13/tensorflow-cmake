@@ -136,11 +136,15 @@ endfunction()
 
 file(GLOB_RECURSE tf_protos_cc_srcs RELATIVE ${tensorflow_source_dir}
     "${tensorflow_source_dir}/tensorflow/core/*.proto"
-    "${tensorflow_source_dir}/tensorflow/compiler/xla/*.proto"
-    "${tensorflow_source_dir}/tensorflow/contrib/boosted_trees/proto/*.proto"
-    "${tensorflow_source_dir}/tensorflow/contrib/tpu/proto/*.proto"
+    "${tensorflow_source_dir}/tensorflow/compiler/*.proto"
     "${tensorflow_source_dir}/tensorflow/stream_executor/*.proto"
+    "${tensorflow_source_dir}/tensorflow/contrib/tpu/*.proto"
+    "${tensorflow_source_dir}/tensorflow/contrib/boosted_trees/proto/*.proto"
 )
+file(GLOB_RECURSE tf_protos_cc_srcs_exclude RELATIVE ${tensorflow_source_dir}
+    "${tensorflow_source_dir}/tensorflow/compiler/xla/rpc/*.proto"
+)
+list(REMOVE_ITEM tf_protos_cc_srcs ${tf_protos_cc_srcs_exclude})
 
 RELATIVE_PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS
     ${tensorflow_source_dir} ${tf_protos_cc_srcs}
@@ -148,45 +152,19 @@ RELATIVE_PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS
 
 
 set(PROTO_TEXT_EXE "proto_text")
-set(tf_proto_text_srcs
-    "tensorflow/core/example/example.proto"
-    "tensorflow/core/example/feature.proto"
-    "tensorflow/core/framework/allocation_description.proto"
-    "tensorflow/core/framework/api_def.proto"
-    "tensorflow/core/framework/attr_value.proto"
-    "tensorflow/core/framework/cost_graph.proto"
-    "tensorflow/core/framework/device_attributes.proto"
-    "tensorflow/core/framework/function.proto"
-    "tensorflow/core/framework/graph.proto"
-    "tensorflow/core/framework/graph_transfer_info.proto"
-    "tensorflow/core/framework/iterator.proto"
-    "tensorflow/core/framework/kernel_def.proto"
-    "tensorflow/core/framework/log_memory.proto"
-    "tensorflow/core/framework/node_def.proto"
-    "tensorflow/core/framework/op_def.proto"
-    "tensorflow/core/framework/reader_base.proto"
-    "tensorflow/core/framework/remote_fused_graph_execute_info.proto"
-    "tensorflow/core/framework/resource_handle.proto"
-    "tensorflow/core/framework/step_stats.proto"
-    "tensorflow/core/framework/summary.proto"
-    "tensorflow/core/framework/tensor.proto"
-    "tensorflow/core/framework/tensor_description.proto"
-    "tensorflow/core/framework/tensor_shape.proto"
-    "tensorflow/core/framework/tensor_slice.proto"
-    "tensorflow/core/framework/types.proto"
-    "tensorflow/core/framework/variable.proto"
-    "tensorflow/core/framework/versions.proto"
-    "tensorflow/core/lib/core/error_codes.proto"
-    "tensorflow/core/protobuf/cluster.proto"
-    "tensorflow/core/protobuf/config.proto"
-    "tensorflow/core/protobuf/debug.proto"
-    "tensorflow/core/protobuf/device_properties.proto"
-    "tensorflow/core/protobuf/rewriter_config.proto"
-    "tensorflow/core/protobuf/tensor_bundle.proto"
-    "tensorflow/core/protobuf/saver.proto"
-    "tensorflow/core/util/memmapped_file_system.proto"
-    "tensorflow/core/util/saved_tensor_slice.proto"
+file(GLOB_RECURSE tf_proto_text_srcs RELATIVE ${tensorflow_source_dir}
+    "${tensorflow_source_dir}/tensorflow/core/*.proto"
 )
+# compile error (cannot find any.proto)
+file(GLOB tf_proto_text_srcs_exclude RELATIVE ${tensorflow_source_dir}
+    "${tensorflow_source_dir}/tensorflow/core/protobuf/meta_graph.proto"
+    "${tensorflow_source_dir}/tensorflow/core/protobuf/worker_service.proto"
+    "${tensorflow_source_dir}/tensorflow/core/protobuf/worker.proto"
+    "${tensorflow_source_dir}/tensorflow/core/protobuf/saved_model.proto"
+    "${tensorflow_source_dir}/tensorflow/core/util/test_log.proto"
+    "${tensorflow_source_dir}/tensorflow/core/debug/*.proto"
+)
+list(REMOVE_ITEM tf_proto_text_srcs ${tf_proto_text_srcs_exclude})
 RELATIVE_PROTOBUF_TEXT_GENERATE_CPP(PROTO_TEXT_SRCS PROTO_TEXT_HDRS
     ${tensorflow_source_dir} ${tf_proto_text_srcs}
 )
@@ -196,6 +174,7 @@ if(WIN32)
 else()
   file(GLOB_RECURSE tf_protos_grpc_cc_srcs RELATIVE ${tensorflow_source_dir}
       "${tensorflow_source_dir}/tensorflow/core/debug/*.proto"
+      "${tensorflow_source_dir}/tensorflow/compiler/xla/rpc/xla_service.proto"
   )
   RELATIVE_PROTOBUF_GENERATE_GRPC_CPP(PROTO_GRPC_SRCS PROTO_GRPC_HDRS
       ${tensorflow_source_dir} ${tf_protos_grpc_cc_srcs}
@@ -217,12 +196,15 @@ file(GLOB tf_core_platform_srcs
     "${tensorflow_source_dir}/tensorflow/core/platform/*.cc"
     "${tensorflow_source_dir}/tensorflow/core/platform/default/*.h"
     "${tensorflow_source_dir}/tensorflow/core/platform/default/*.cc"
+    "${tensorflow_source_dir}/tensorflow/core/platform/profile_utils/*.h"
+    "${tensorflow_source_dir}/tensorflow/core/platform/profile_utils/*.cc"
     "${tensorflow_source_dir}/tensorflow/core/framework/resource_handle.h"
     "${tensorflow_source_dir}/tensorflow/core/framework/resource_handle.cc")
 if (NOT tensorflow_ENABLE_GPU)
   file(GLOB tf_core_platform_gpu_srcs_exclude
       "${tensorflow_source_dir}/tensorflow/core/platform/cuda_libdevice_path.*"
-      "${tensorflow_source_dir}/tensorflow/core/platform/default/cuda_libdevice_path.*")
+      "${tensorflow_source_dir}/tensorflow/core/platform/default/cuda_libdevice_path.*"
+      "${tensorflow_source_dir}/tensorflow/core/platform/profile_utils/*test.*")
   list(REMOVE_ITEM tf_core_platform_srcs ${tf_core_platform_gpu_srcs})
 else()
   file(GLOB tf_core_platform_srcs_exclude

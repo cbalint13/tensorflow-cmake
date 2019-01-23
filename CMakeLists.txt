@@ -61,6 +61,9 @@ option(tensorflow_ENABLE_MKLDNN_SUPPORT "Enable Intel MKLDNN support, requires M
 # GPU, CUDA and cuDNN options
 option(tensorflow_ENABLE_GPU "Enable GPU support" OFF)
 
+# experimental support
+option(tensorflow_ENABLE_EXPERIMENTAL "Enable experimental support" OFF)
+
 if(HAIKU)
 	option(tensorflow_ENABLE_POSITION_INDEPENDENT_CODE "Enable PIE support" OFF)
 else()
@@ -290,6 +293,7 @@ add_definitions(${ADD_CFLAGS})
 link_directories(${ADD_LINK_DIRECTORY})
 
 set(tensorflow_EXTERNAL_LIBRARIES
+    LLVM
     ${tensorflow_EXTERNAL_LIBRARIES}
     ${farmhash_STATIC_LIBRARIES}
     ${fft2d_STATIC_LIBRARIES}
@@ -572,6 +576,7 @@ endif()
 include(tf_cc_ops.cmake)
 include(tf_c.cmake)
 include(tf_grappler.cmake)
+include(tf_compiler.cmake)
 include(tf_core_profiler.cmake)
 include(tf_core_eager_runtime.cmake)
 if(tensorflow_BUILD_CC_EXAMPLE)

@@ -57,7 +57,11 @@ file(GLOB tf_stream_executor_srcs
     "${tensorflow_source_dir}/tensorflow/stream_executor/*.h"
     "${tensorflow_source_dir}/tensorflow/stream_executor/lib/*.cc"
     "${tensorflow_source_dir}/tensorflow/stream_executor/lib/*.h"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/host/*.cc"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/host/*.h"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/platform/*.cc"
     "${tensorflow_source_dir}/tensorflow/stream_executor/platform/*.h"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/platform/default/*.cc"
     "${tensorflow_source_dir}/tensorflow/stream_executor/platform/default/*.h"
 )
 
@@ -75,8 +79,11 @@ if (tensorflow_ENABLE_GPU)
 endif()
 
 file(GLOB_RECURSE tf_stream_executor_test_srcs
-    "${tensorflow_source_dir}/tensorflow/stream_executor/*test.cc"
-    "${tensorflow_source_dir}/tensorflow/stream_executor/lib/*test.h"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/*test.*"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/lib/*test.*"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/host/*test.*"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/platform/*test.*"
+    "${tensorflow_source_dir}/tensorflow/stream_executor/platform/default/*test.*"
 )
 list(REMOVE_ITEM tf_stream_executor_srcs ${tf_stream_executor_test_srcs})
 

@@ -24,7 +24,7 @@ if(EXISTS "${ABSEIL_CPP_INCLUDE_DIR}" AND NOT "${ABSEIL_CPP_INCLUDE_DIR}" STREQU
     # search all libraries if no COMPONENTS was requested
     set(AbseilCpp_FIND_COMPONENTS
         "absl_algorithm;absl_any;absl_bad_any_cast"
-        "absl_bad_optional_access;absl_base absl_container;absl_debugging"
+        "absl_bad_optional_access;absl_base;absl_debugging"
         "absl_dynamic_annotations;absl_examine_stack;absl_failure_signal_handler"
         "absl_int128;absl_leak_check;absl_malloc_internal;absl_memory;absl_meta"
         "absl_numeric;absl_optional;absl_span;absl_spinlock_wait;absl_stack_consumption"
