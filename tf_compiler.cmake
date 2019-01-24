@@ -110,15 +110,7 @@ file(GLOB_RECURSE tf_compiler_srcs
     "${tensorflow_source_dir}/tensorflow/compiler/tf2tensorrt/*.cc"
 )
 
-#if(tensorflow_ENABLE_EXPERIMENTAL)
-#  file(GLOB_RECURSE tf_compiler_experimental_srcs
-#  )
-#  list(APPEND tf_compiler_srcs ${tf_compiler_experimental_srcs})
-#endif()
-
-#    "${tensorflow_source_dir}/tensorflow/compiler/jit/node_matchers.*"
 file(GLOB_RECURSE tf_compiler_srcs_exclude
-    "${tensorflow_source_dir}/tensorflow/compiler/*/ops/*"
     "${tensorflow_source_dir}/tensorflow/compiler/*/python/*"
     "${tensorflow_source_dir}/tensorflow/compiler/*/*_main.cc"
     "${tensorflow_source_dir}/tensorflow/compiler/jit/node_matchers.cc"
