@@ -18,11 +18,13 @@
 ########################################################
 
 file(GLOB compiler_ops_gen_targets
-  "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_compile_ops.cc"
-  "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_execute_op.cc"
-  "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_state_ops.cc"
-  "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/ops/xla_ops.cc"
-  "${tensorflow_source_dir}/tensorflow/compiler/jit/ops/xla_ops.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/jit/ops/xla_ops.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/ops/xla_ops.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/tf2tensorrt/ops/get_serialized_resource_op.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/tf2tensorrt/ops/trt_engine_op.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_compile_ops.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_execute_op.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/xrt/ops/xrt_state_ops.cc"
 )
 
 set(tf_compiler_ops_generated_files)
@@ -94,23 +96,25 @@ endforeach()
 ########################################################
 
 file(GLOB_RECURSE tf_compiler_srcs
+    "${tensorflow_source_dir}/tensorflow/compiler/aot/*.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/aot/*.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/jit/*.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/jit/*.cc"
     "${tensorflow_source_dir}/tensorflow/compiler/xla/*.h"
     "${tensorflow_source_dir}/tensorflow/compiler/xla/*.cc"
     "${tensorflow_source_dir}/tensorflow/compiler/xrt/*.h"
     "${tensorflow_source_dir}/tensorflow/compiler/xrt/*.cc"
     "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/*.h"
     "${tensorflow_source_dir}/tensorflow/compiler/tf2xla/*.cc"
-    "${tensorflow_source_dir}/tensorflow/compiler/jit/*.h"
-    "${tensorflow_source_dir}/tensorflow/compiler/jit/*.cc"
+    "${tensorflow_source_dir}/tensorflow/compiler/tf2tensorrt/*.h"
+    "${tensorflow_source_dir}/tensorflow/compiler/tf2tensorrt/*.cc"
 )
 
-if(tensorflow_ENABLE_EXPERIMENTAL)
-  file(GLOB_RECURSE tf_compiler_experimental_srcs
-      "${tensorflow_source_dir}/tensorflow/compiler/aot/*.h"
-      "${tensorflow_source_dir}/tensorflow/compiler/aot/*.cc"
-  )
-  list(APPEND tf_compiler_srcs ${tf_compiler_experimental_srcs})
-endif()
+#if(tensorflow_ENABLE_EXPERIMENTAL)
+#  file(GLOB_RECURSE tf_compiler_experimental_srcs
+#  )
+#  list(APPEND tf_compiler_srcs ${tf_compiler_experimental_srcs})
+#endif()
 
 #    "${tensorflow_source_dir}/tensorflow/compiler/jit/node_matchers.*"
 file(GLOB_RECURSE tf_compiler_srcs_exclude

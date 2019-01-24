@@ -175,6 +175,7 @@ else()
   file(GLOB_RECURSE tf_protos_grpc_cc_srcs RELATIVE ${tensorflow_source_dir}
       "${tensorflow_source_dir}/tensorflow/core/debug/*.proto"
       "${tensorflow_source_dir}/tensorflow/compiler/xla/rpc/xla_service.proto"
+      "${tensorflow_source_dir}/tensorflow/contrib/tpu/profiler/tpu_profiler.proto"
   )
   RELATIVE_PROTOBUF_GENERATE_GRPC_CPP(PROTO_GRPC_SRCS PROTO_GRPC_HDRS
       ${tensorflow_source_dir} ${tf_protos_grpc_cc_srcs}

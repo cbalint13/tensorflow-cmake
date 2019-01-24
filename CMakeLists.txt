@@ -77,18 +77,18 @@ if (NOT WIN32)
   find_package (Threads REQUIRED)
 
   # Options for linking CUDA/CUDNN libraries
-  option(tensorflow_PATH_CUDA_LIB "Additional library search path for cudnn, nccl, culibos" /usr/local/cuda/lib64/)
-  option(tensorflow_CUDNN_INCLUDE "cudnn.h header install path" /usr/include/)
+  option(tensorflow_PATH_CUDA_LIB "Additional library search path for cudnn, nccl, culibos" /usr/local/cuda/lib64)
+  option(tensorflow_CUDNN_INCLUDE "Additional search path for cudnn.h header" /usr/local/cuda/include)
   if (NOT tensorflow_CUDNN_INCLUDE)
     # option's default value is OFF. Fill it with real default values
-    set(tensorflow_CUDNN_INCLUDE /usr/include)
+    set(tensorflow_CUDNN_INCLUDE /usr/local/cuda/include)
   endif (NOT tensorflow_CUDNN_INCLUDE)
-  option(tensorflow_PATH_CUDNN_LIB "Override PATH_CUDA_LIB for cudnn" ${tensorflow_PATH_CUDA_LIB})
+  option(tensorflow_PATH_CUDNN_LIB "Override PATH_CUDNN_LIB for cudnn" ${tensorflow_PATH_CUDA_LIB})
   if (NOT tensorflow_PATH_CUDNN_LIB)
     # option's default value is OFF. Fill it with real default values
     set (tensorflow_PATH_CUDNN_LIB ${tensorflow_PATH_CUDA_LIB})
   endif (NOT tensorflow_PATH_CUDNN_LIB)
-  option(tensorflow_PATH_NCCL_LIB "Override PATH_CUDA_LIB for nccl" ${tensorflow_PATH_CUDA_LIB})
+  option(tensorflow_PATH_NCCL_LIB "Override PATH_NCCL_LIB for nccl" ${tensorflow_PATH_CUDA_LIB})
   if (NOT tensorflow_PATH_NCCL_LIB)
     # option's default value is OFF. Fill it with real default values
     set (tensorflow_PATH_NCCL_LIB ${tensorflow_PATH_CUDA_LIB})
@@ -147,6 +147,23 @@ else (WIN32)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif (WIN32)
+
+# LLVM
+find_package (LLVM REQUIRED)
+if (LLVM_FOUND)
+  message(STATUS "Found LLVM (\"${LLVM_VERSION}\")")
+  string(COMPARE LESS "${LLVM_VERSION}" 7.0.0 VersionIncompatible)
+  if(VersionIncompatible)
+    message(FATAL_ERROR "LLVM minimum 7.0 required.")
+  endif()
+  message(STATUS "  LLVM includes: ${LLVM_INCLUDE_DIR}")
+  message(STATUS "  LLVM targets: ${LLVM_TARGETS_TO_BUILD}")
+  message(STATUS "  LLVM jit targets: ${LLVM_TARGETS_WITH_JIT}")
+  include_directories(${LLVM_INCLUDE_DIR})
+  list(APPEND tensorflow_EXTERNAL_LIBRARIES "LLVM")
+else()
+  message(FATAL_ERROR "LLVM not found.")
+endif()
 
 # [CLEANUP] Remove when done
 # For debugging
@@ -293,7 +310,6 @@ add_definitions(${ADD_CFLAGS})
 link_directories(${ADD_LINK_DIRECTORY})
 
 set(tensorflow_EXTERNAL_LIBRARIES
-    LLVM
     ${tensorflow_EXTERNAL_LIBRARIES}
     ${farmhash_STATIC_LIBRARIES}
     ${fft2d_STATIC_LIBRARIES}
@@ -404,7 +420,18 @@ if (tensorflow_ENABLE_GPU)
     set(CUDA_LIBRARIES ${CUDA_LIBRARIES} ${CUDA_CUDA_LIBRARY} ${CUDA_CUBLAS_LIBRARIES} ${CUDA_CUFFT_LIBRARIES}
       ${CUDA_curand_LIBRARY} ${CUDA_cupti_LIBRARY} ${CUDA_cusolver_LIBRARY} ${CUDNN_HOME}/lib/x64/cudnn.lib)
   else (WIN32)
-    set(CUDNN_INCLUDE "${tensorflow_CUDNN_INCLUDE}")
+
+    find_path(CUDNN_INCLUDE NAME cudnn.h
+      HINTS "${tensorflow_CUDNN_INCLUDE}"
+            "/usr/local/cuda/include"
+      PATHS "$ENV{PROGRAMFILES}"
+            "$ENV{PROGRAMW6432}"
+      PATH_SUFFIXES "")
+    if(EXISTS "${CUDNN_INCLUDE}" AND NOT "${CUDNN_INCLUDE}" STREQUAL "")
+      message(STATUS "Found CUDNN header in ${CUDNN_INCLUDE}")
+    else ()
+      message(FATAL_ERROR "CUDNN header not found, please specify hints.")
+    endif ()
 
     if (tensorflow_BUILD_SHARED_LIB)
       find_library(nccl_LIBRARY NAMES libnccl.so PATHS ${tensorflow_PATH_NCCL_LIB} ${CUDA_TOOLKIT_ROOT_DIR})
